@@ -1,0 +1,41 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+build/
+dist/
+
+# Віртуальні середовища
+.venv/
+venv/
+env/
+
+# Тести та покриття
+.pytest_cache/
+.coverage
+htmlcov/
+
+# Jupyter
+.ipynb_checkpoints/
+
+# IDE / ОС
+.idea/
+.vscode/
+.DS_Store
+Thumbs.db
+
+# Секрети (паролі, ключі) — ніколи не комітимо
+.env
+*.key
+*.pem
+
+# Тимчасові файли та вихід програм
+tmp/
+out/
+*.log
+results/tmp/
+
+# Закриті матеріали викладача (команді не видаються, у репо не потрапляють)
+teacher/
+holdout.csv
+official_eval.json
