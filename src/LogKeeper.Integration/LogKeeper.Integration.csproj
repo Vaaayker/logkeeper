@@ -1,0 +1,9 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <ItemGroup>
+    <ProjectReference Include="..\LogKeeper.Core\LogKeeper.Core.csproj" />
+    <ProjectReference Include="..\LogKeeper.Compression\LogKeeper.Compression.csproj" />
+    <ProjectReference Include="..\LogKeeper.Scheduler\LogKeeper.Scheduler.csproj" />
+    <ProjectReference Include="..\LogKeeper.Classifier\LogKeeper.Classifier.csproj" />
+    <ProjectReference Include="..\LogKeeper.Security\LogKeeper.Security.csproj" />
+  </ItemGroup>
+</Project>

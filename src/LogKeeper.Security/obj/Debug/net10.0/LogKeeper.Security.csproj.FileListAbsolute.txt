@@ -1,0 +1,12 @@
+/Users/bereznakmaksim/Documents/devProjects/logkeeper/src/LogKeeper.Security/bin/Debug/net10.0/LogKeeper.Security.deps.json
+/Users/bereznakmaksim/Documents/devProjects/logkeeper/src/LogKeeper.Security/bin/Debug/net10.0/LogKeeper.Security.dll
+/Users/bereznakmaksim/Documents/devProjects/logkeeper/src/LogKeeper.Security/bin/Debug/net10.0/LogKeeper.Security.pdb
+/Users/bereznakmaksim/Documents/devProjects/logkeeper/src/LogKeeper.Security/obj/Debug/net10.0/LogKeeper.Security.GeneratedMSBuildEditorConfig.editorconfig
+/Users/bereznakmaksim/Documents/devProjects/logkeeper/src/LogKeeper.Security/obj/Debug/net10.0/LogKeeper.Security.AssemblyInfoInputs.cache
+/Users/bereznakmaksim/Documents/devProjects/logkeeper/src/LogKeeper.Security/obj/Debug/net10.0/LogKeeper.Security.AssemblyInfo.cs
+/Users/bereznakmaksim/Documents/devProjects/logkeeper/src/LogKeeper.Security/obj/Debug/net10.0/LogKeeper.Security.csproj.CoreCompileInputs.cache
+/Users/bereznakmaksim/Documents/devProjects/logkeeper/src/LogKeeper.Security/obj/Debug/net10.0/LogKeeper.Security.sourcelink.json
+/Users/bereznakmaksim/Documents/devProjects/logkeeper/src/LogKeeper.Security/obj/Debug/net10.0/LogKeeper.Security.dll
+/Users/bereznakmaksim/Documents/devProjects/logkeeper/src/LogKeeper.Security/obj/Debug/net10.0/refint/LogKeeper.Security.dll
+/Users/bereznakmaksim/Documents/devProjects/logkeeper/src/LogKeeper.Security/obj/Debug/net10.0/LogKeeper.Security.pdb
+/Users/bereznakmaksim/Documents/devProjects/logkeeper/src/LogKeeper.Security/obj/Debug/net10.0/ref/LogKeeper.Security.dll

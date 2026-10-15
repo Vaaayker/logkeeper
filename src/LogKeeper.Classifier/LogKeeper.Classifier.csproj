@@ -1,0 +1,5 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <ItemGroup>
+    <ProjectReference Include="..\LogKeeper.Core\LogKeeper.Core.csproj" />
+  </ItemGroup>
+</Project>

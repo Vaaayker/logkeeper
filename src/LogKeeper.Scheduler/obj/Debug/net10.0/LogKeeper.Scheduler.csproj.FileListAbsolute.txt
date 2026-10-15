@@ -1,0 +1,12 @@
+/Users/bereznakmaksim/Documents/devProjects/logkeeper/src/LogKeeper.Scheduler/bin/Debug/net10.0/LogKeeper.Scheduler.deps.json
+/Users/bereznakmaksim/Documents/devProjects/logkeeper/src/LogKeeper.Scheduler/bin/Debug/net10.0/LogKeeper.Scheduler.dll
+/Users/bereznakmaksim/Documents/devProjects/logkeeper/src/LogKeeper.Scheduler/bin/Debug/net10.0/LogKeeper.Scheduler.pdb
+/Users/bereznakmaksim/Documents/devProjects/logkeeper/src/LogKeeper.Scheduler/obj/Debug/net10.0/LogKeeper.Scheduler.GeneratedMSBuildEditorConfig.editorconfig
+/Users/bereznakmaksim/Documents/devProjects/logkeeper/src/LogKeeper.Scheduler/obj/Debug/net10.0/LogKeeper.Scheduler.AssemblyInfoInputs.cache
+/Users/bereznakmaksim/Documents/devProjects/logkeeper/src/LogKeeper.Scheduler/obj/Debug/net10.0/LogKeeper.Scheduler.AssemblyInfo.cs
+/Users/bereznakmaksim/Documents/devProjects/logkeeper/src/LogKeeper.Scheduler/obj/Debug/net10.0/LogKeeper.Scheduler.csproj.CoreCompileInputs.cache
+/Users/bereznakmaksim/Documents/devProjects/logkeeper/src/LogKeeper.Scheduler/obj/Debug/net10.0/LogKeeper.Scheduler.sourcelink.json
+/Users/bereznakmaksim/Documents/devProjects/logkeeper/src/LogKeeper.Scheduler/obj/Debug/net10.0/LogKeeper.Scheduler.dll
+/Users/bereznakmaksim/Documents/devProjects/logkeeper/src/LogKeeper.Scheduler/obj/Debug/net10.0/refint/LogKeeper.Scheduler.dll
+/Users/bereznakmaksim/Documents/devProjects/logkeeper/src/LogKeeper.Scheduler/obj/Debug/net10.0/LogKeeper.Scheduler.pdb
+/Users/bereznakmaksim/Documents/devProjects/logkeeper/src/LogKeeper.Scheduler/obj/Debug/net10.0/ref/LogKeeper.Scheduler.dll

@@ -1,0 +1,9 @@
+<Project>
+  <PropertyGroup>
+    <!-- Версію .NET міняємо ТІЛЬКИ тут (наприклад, на net8.0, якщо в команди встановлено SDK 8). -->
+    <TargetFramework>net10.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <LangVersion>latest</LangVersion>
+  </PropertyGroup>
+</Project>

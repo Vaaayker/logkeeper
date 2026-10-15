@@ -1,4 +1,4 @@
-# Log Replication — розумна захищена система пріоритетної реплікації журналів подій
+# LogKeeper: розумна захищена система пріоритетної реплікації журналів подій
 
 Командний семестровий проєкт з дисципліни «Алгоритми і оптимізація програмних рішень» (Проєкт 3).
 
@@ -10,11 +10,13 @@
 
 | Учасник | Модуль (зона відповідальності) | Папка |
 |---|---|---|
-| Максим (керівник проєкту) | Інтеграція та відновлення | `src/logrepl/integration/` |
-| Ігор | Планувальник реплікації: ДП + жадібні алгоритми | `src/logrepl/scheduler/` |
-| Проскура Даня | Класифікація подій: перцептрон | `src/logrepl/classifier/` |
-| Таран Даня | Захист (PBKDF2, AES, HMAC) + генетичний алгоритм + атака | `src/logrepl/security/` |
-| Міша | Стиснення: канонічний Гаффман | `src/logrepl/compression/` |
+| Максим (керівник проєкту) | Інтеграція та відновлення, спільні типи | `src/LogKeeper.Integration/`, `src/LogKeeper.Core/` |
+| Ігор | Планувальник реплікації: ДП + жадібні алгоритми | `src/LogKeeper.Scheduler/` |
+| Проскура Даня | Класифікація подій: перцептрон | `src/LogKeeper.Classifier/` |
+| Таран Даня | Захист (PBKDF2, AES, HMAC) + генетичний алгоритм + атака | `src/LogKeeper.Security/` |
+| Міша | Стиснення: канонічний Гаффман | `src/LogKeeper.Compression/` |
+
+Тести кожного модуля лежать у `tests/LogKeeper.Tests/<Модуль>/`.
 
 ## Що робить система
 
@@ -26,17 +28,21 @@
 
 ```
 потік подій
- → classifier   (перцептрон: клас 0/1/2)
- → compression  (канонічний Гаффман)
- → scheduler    (ДП: скільки копій; жадібний: на який вузол і в якому порядку)
- → security     (PBKDF2 → AES-256-CTR → HMAC)
- → вузли (replication.py, не змінюємо)
- → integration  (перевірка HMAC → розшифрування → декодування → дедуплікація → відновлення)
+ → Classifier   (перцептрон: клас 0/1/2)
+ → Compression  (канонічний Гаффман)
+ → Scheduler    (ДП: скільки копій; жадібний: на який вузол і в якому порядку)
+ → Security     (PBKDF2 → AES-256-CTR → HMAC)
+ → вузли        (replication.py, не змінюємо; запускається з C# як зовнішній процес)
+ → Integration  (перевірка HMAC → розшифрування → декодування → дедуплікація → відновлення)
 
-security/ga.py     — генетичний алгоритм налаштовує параметри
-security/attack.py — модуль атаки для тижня змагань
-integration/       — зв'язує всі модулі, рахує метрику Q
+Core                           — спільні типи (LogRecord, RecordCodec)
+Security/GeneticAlgorithm.cs   — генетичний алгоритм налаштовує параметри
+Security/WeakCipherAttack.cs   — модуль атаки для тижня змагань
+Integration                    — зв'язує всі модулі, рахує метрику Q
 ```
+
+Залежності проєктів: `Integration` бачить усі модулі; `Classifier` бачить лише `Core`;
+решта модулів не залежать одне від одного.
 
 ## Основні алгоритми
 
@@ -49,35 +55,38 @@ integration/       — зв'язує всі модулі, рахує метри�
 
 ## Вимоги
 
-- Python 3.10+
-- залежності з `requirements.txt`
+- .NET SDK 10 (версія задається в одному місці — `Directory.Build.props`)
+- Python 3.10+ (лише для запуску `replication.py`)
+- Git
 
 ## Встановлення
 
 ```bash
-git clone <URL репозиторію>
-cd log-replication
-python -m venv .venv
-source .venv/bin/activate        # Windows: .venv\Scripts\activate
-pip install -r requirements.txt
+git clone https://github.com/Vaaayker/logkeeper.git
+cd logkeeper
+dotnet restore
+dotnet build
 ```
 
 ## Запуск тестів
 
 ```bash
-pytest
+dotnet test
 ```
 
-Один модуль або файл:
+Один модуль:
 
 ```bash
-pytest tests/compression
-pytest tests/scheduler/test_knapsack.py
+dotnet test --filter "FullyQualifiedName~Compression"
 ```
 
 ## Запуск програми та експериментів
 
-_Буде описано до Чекпоінту 1 (мінімальна наскрізна версія) та Чекпоінту 2 (`experiments/`)._
+```bash
+dotnet run --project src/LogKeeper.App
+```
+
+_Повний наскрізний запуск і експерименти (`experiments/`) буде описано до Чекпоінтів 1 і 2._
 
 ## Вхідні дані
 
@@ -86,11 +95,11 @@ _Буде описано до Чекпоінту 1 (мінімальна нас�
 
 ## Результати
 
-Таблиці й метрики для звіту генеруються скриптами з `experiments/` у папку `results/`.
+Таблиці й метрики для звіту генеруються експериментами з `experiments/` у папку `results/`.
 
 ## Відтворення фінального результату
 
-_Буде описано наприкінці проєкту (final tag, `pytest`, `python experiments/run_final.py`)._
+_Буде описано наприкінці проєкту (final tag, `dotnet test`, команда фінального експерименту)._
 
 ## Відомі обмеження
 
@@ -101,7 +110,7 @@ _Заповнюється по ходу роботи._
 1. Усі задачі — через **issue** (одна issue = одна невелика задача з чітким результатом).
 2. Для кожної issue — окрема гілка `feature/<модуль>-<суть>`. **У `main` напряму не комітимо.**
 3. У кожному коміті — номер issue та зрозумілий опис: `add canonical Huffman encoder (#14)`. Не `fix`, `new`, `final`.
-4. Перед PR запускаємо `pytest` — усе має проходити.
+4. Перед PR запускаємо `dotnet test` — усе має проходити.
 5. Pull request у `main` переглядає інший учасник (review за колом). `main` завжди проходить тести.
 6. Щонайменше один змістовний коміт на тиждень від кожного.
 7. Технічні рішення записуємо в `docs/decisions.md`.

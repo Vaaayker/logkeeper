@@ -1,0 +1,16 @@
+/Users/bereznakmaksim/Documents/devProjects/logkeeper/src/LogKeeper.Classifier/bin/Debug/net10.0/LogKeeper.Classifier.deps.json
+/Users/bereznakmaksim/Documents/devProjects/logkeeper/src/LogKeeper.Classifier/bin/Debug/net10.0/LogKeeper.Classifier.dll
+/Users/bereznakmaksim/Documents/devProjects/logkeeper/src/LogKeeper.Classifier/bin/Debug/net10.0/LogKeeper.Classifier.pdb
+/Users/bereznakmaksim/Documents/devProjects/logkeeper/src/LogKeeper.Classifier/bin/Debug/net10.0/LogKeeper.Core.dll
+/Users/bereznakmaksim/Documents/devProjects/logkeeper/src/LogKeeper.Classifier/bin/Debug/net10.0/LogKeeper.Core.pdb
+/Users/bereznakmaksim/Documents/devProjects/logkeeper/src/LogKeeper.Classifier/obj/Debug/net10.0/LogKeeper.Classifier.csproj.AssemblyReference.cache
+/Users/bereznakmaksim/Documents/devProjects/logkeeper/src/LogKeeper.Classifier/obj/Debug/net10.0/LogKeeper.Classifier.GeneratedMSBuildEditorConfig.editorconfig
+/Users/bereznakmaksim/Documents/devProjects/logkeeper/src/LogKeeper.Classifier/obj/Debug/net10.0/LogKeeper.Classifier.AssemblyInfoInputs.cache
+/Users/bereznakmaksim/Documents/devProjects/logkeeper/src/LogKeeper.Classifier/obj/Debug/net10.0/LogKeeper.Classifier.AssemblyInfo.cs
+/Users/bereznakmaksim/Documents/devProjects/logkeeper/src/LogKeeper.Classifier/obj/Debug/net10.0/LogKeeper.Classifier.csproj.CoreCompileInputs.cache
+/Users/bereznakmaksim/Documents/devProjects/logkeeper/src/LogKeeper.Classifier/obj/Debug/net10.0/LogKeeper.Classifier.sourcelink.json
+/Users/bereznakmaksim/Documents/devProjects/logkeeper/src/LogKeeper.Classifier/obj/Debug/net10.0/LogKeepe.FCF772E5.Up2Date
+/Users/bereznakmaksim/Documents/devProjects/logkeeper/src/LogKeeper.Classifier/obj/Debug/net10.0/LogKeeper.Classifier.dll
+/Users/bereznakmaksim/Documents/devProjects/logkeeper/src/LogKeeper.Classifier/obj/Debug/net10.0/refint/LogKeeper.Classifier.dll
+/Users/bereznakmaksim/Documents/devProjects/logkeeper/src/LogKeeper.Classifier/obj/Debug/net10.0/LogKeeper.Classifier.pdb
+/Users/bereznakmaksim/Documents/devProjects/logkeeper/src/LogKeeper.Classifier/obj/Debug/net10.0/ref/LogKeeper.Classifier.dll
