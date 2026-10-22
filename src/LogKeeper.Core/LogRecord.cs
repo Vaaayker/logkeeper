@@ -1,12 +1,12 @@
 namespace LogKeeper.Core;
 
-/// <summary>Один запис журналу (16 байтів). Точні поля й типи — у FORMAT_SPEC_P3.md.</summary>
+/// <summary>Один запис журналу (16 байтів). Розкладка — у docs/FORMAT_SPEC_P3.md.</summary>
 public sealed record LogRecord(
     long TimestampMs,
-    int SourceId,
-    int EventCode,
-    int MetricValue,   // тип уточнити за FORMAT_SPEC_P3.md
-    int Category,
-    int Severity,
-    int Critical,
-    int RecordFlags);
+    ushort SourceId,
+    ushort EventCode,
+    short MetricValue,
+    byte Category,
+    byte Severity,
+    bool Critical,
+    byte RecordFlags);
