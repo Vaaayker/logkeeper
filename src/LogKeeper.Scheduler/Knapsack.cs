@@ -54,6 +54,67 @@ public static class Knapsack
     }
 
     /// <summary>Багатоваріантний рюкзак: кількість копій r_i для кожної події.</summary>
+    // Складність: O(n · W · 4) за часом, O(n · W) за пам'яттю
     public static int[] ChooseCopies(int[] weights, int[][] utilities, int budget)
-        => throw new NotImplementedException();
+    {
+        if (weights == null || utilities == null || weights.Length == 0)
+            return Array.Empty<int>();
+
+        if (budget <= 0)
+            return new int[weights.Length];
+
+        if (weights.Length != utilities.Length)
+            throw new ArgumentException("Довжини масивів weights та utilities не збігаються.");
+
+        for (int i = 0; i < weights.Length; i++)
+        {
+            if (utilities[i] == null || utilities[i].Length != 4)
+                throw new ArgumentException($"Масив utilities[{i}] має містити рівно 4 елементи.");
+            if (weights[i] < 0)
+                throw new ArgumentException($"Вага weights[{i}] не може бути від'ємною.");
+        }
+
+        int n = weights.Length;
+        int[,] dp = new int[n + 1, budget + 1];
+
+        // Прямий прохід
+        for (int i = 1; i <= n; i++)
+        {
+            int wItem = weights[i - 1];
+            for (int w = 0; w <= budget; w++)
+            {
+                dp[i, w] = dp[i - 1, w]; // Базовий вибір: r = 0
+
+                for (int r = 1; r <= 3; r++)
+                {
+                    int cost = r * wItem;
+                    if (cost <= w)
+                    {
+                        dp[i, w] = Math.Max(dp[i, w], dp[i - 1, w - cost] + utilities[i - 1][r]);
+                    }
+                }
+            }
+        }
+
+        // Зворотний прохід (відновлення відповіді)
+        int[] chosenCopies = new int[n];
+        int currentW = budget;
+
+        for (int i = n; i >= 1; i--)
+        {
+            int wItem = weights[i - 1];
+            for (int r = 0; r <= 3; r++)
+            {
+                int cost = r * wItem;
+                if (currentW >= cost && dp[i, currentW] == dp[i - 1, currentW - cost] + utilities[i - 1][r])
+                {
+                    chosenCopies[i - 1] = r;
+                    currentW -= cost;
+                    break;
+                }
+            }
+        }
+
+        return chosenCopies;
+    }
 }
