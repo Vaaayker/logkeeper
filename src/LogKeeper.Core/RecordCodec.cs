@@ -46,6 +46,30 @@ public static class RecordCodec
         return record;
     }
 
+    /// <summary>Записи підряд, по <see cref="Size"/> байтів кожен, без заголовка.</summary>
+    public static byte[] SerializeMany(IReadOnlyList<LogRecord> records)
+    {
+        ArgumentNullException.ThrowIfNull(records);
+
+        var data = new byte[records.Count * Size];
+        for (int i = 0; i < records.Count; i++)
+            Serialize(records[i]).CopyTo(data, i * Size);
+        return data;
+    }
+
+    /// <summary>Розбирає послідовність 16-байтових записів. Довжина не кратна 16 або
+    /// некоректний запис -> FormatException; порожній вхід -> порожній список.</summary>
+    public static List<LogRecord> ParseMany(ReadOnlySpan<byte> data)
+    {
+        if (data.Length % Size != 0)
+            throw new FormatException($"Довжина пакета записів має бути кратна {Size}, отримано {data.Length}.");
+
+        var records = new List<LogRecord>(data.Length / Size);
+        for (int offset = 0; offset < data.Length; offset += Size)
+            records.Add(Parse(data.Slice(offset, Size)));
+        return records;
+    }
+
     private static void Validate(LogRecord r)
     {
         if (r.TimestampMs < 0)
