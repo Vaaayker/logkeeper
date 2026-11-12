@@ -39,3 +39,7 @@ results/tmp/
 teacher/
 holdout.csv
 official_eval.json
+
+# Збірка .NET
+bin/
+obj/
