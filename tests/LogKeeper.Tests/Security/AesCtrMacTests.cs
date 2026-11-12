@@ -69,4 +69,48 @@ public class AesCtrMacTests
         Assert.False(Mac.Verify(Key, [1, 2, 3], Plain, tag));
         Assert.False(Mac.Verify(Key, [1, 2, 3], Plain, tag[..16]));
     }
+    [Fact]
+    public void AesCtr_DifferentNonce_ProducesDifferentCiphertext()
+    {
+        byte[] nonce2 = (byte[])Nonce.Clone();
+        nonce2[0] ^= 1;
+
+        byte[] first = AesCtr.Crypt(Key, Nonce, Plain);
+        byte[] second = AesCtr.Crypt(Key, nonce2, Plain);
+
+        Assert.NotEqual(first, second);
+    }
+    [Fact]
+    public void Mac_Verify_RejectsChangedHeaderOrCiphertext()
+    {
+        byte[] header = [1, 2, 3];
+        byte[] ciphertext = [4, 5, 6, 7];
+
+        byte[] tag = Mac.Compute(Key, header, ciphertext);
+
+        byte[] changedHeader = (byte[])header.Clone();
+        changedHeader[0] ^= 1;
+
+        byte[] changedCiphertext = (byte[])ciphertext.Clone();
+        changedCiphertext[0] ^= 1;
+
+        Assert.False(Mac.Verify(Key, changedHeader, ciphertext, tag));
+        Assert.False(Mac.Verify(Key, header, changedCiphertext, tag));
+    }
+    [Fact]
+    public void Mac_Verify_RejectsChangedKeyAndWrongTagLength()
+    {
+        byte[] header = [1, 2, 3];
+        byte[] ciphertext = [4, 5, 6, 7];
+
+        byte[] tag = Mac.Compute(Key, header, ciphertext);
+
+        byte[] changedKey = (byte[])Key.Clone();
+        changedKey[0] ^= 1;
+
+        Assert.False(Mac.Verify(changedKey, header, ciphertext, tag));
+        Assert.False(Mac.Verify(Key, header, ciphertext, tag[..31]));
+        Assert.False(Mac.Verify(Key, header, ciphertext, [.. tag, 0]));
+    }
 }
+
