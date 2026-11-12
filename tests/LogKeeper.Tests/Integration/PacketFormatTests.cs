@@ -1,5 +1,6 @@
-using System.Text;
 using LogKeeper.Integration;
+using System.Buffers.Binary;
+using System.Text;
 
 namespace LogKeeper.Tests.Integration;
 
@@ -30,7 +31,7 @@ public class PacketFormatTests
         Assert.Equal("LOG3"u8.ToArray(), Packet[..4]);
         Assert.Equal(PacketFormat.Version, Packet[4]);
 
-        uint len = BitConverter.ToUInt32(Packet, 33);
+        uint len = BinaryPrimitives.ReadUInt32LittleEndian(Packet.AsSpan(33, 4));
         Assert.Equal(PacketFormat.HeaderSize + len + PacketFormat.TagSize, (uint)Packet.Length);
     }
 

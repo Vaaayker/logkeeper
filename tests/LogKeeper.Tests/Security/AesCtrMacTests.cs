@@ -97,5 +97,20 @@ public class AesCtrMacTests
         Assert.False(Mac.Verify(Key, changedHeader, ciphertext, tag));
         Assert.False(Mac.Verify(Key, header, changedCiphertext, tag));
     }
+    [Fact]
+    public void Mac_Verify_RejectsChangedKeyAndWrongTagLength()
+    {
+        byte[] header = [1, 2, 3];
+        byte[] ciphertext = [4, 5, 6, 7];
+
+        byte[] tag = Mac.Compute(Key, header, ciphertext);
+
+        byte[] changedKey = (byte[])Key.Clone();
+        changedKey[0] ^= 1;
+
+        Assert.False(Mac.Verify(changedKey, header, ciphertext, tag));
+        Assert.False(Mac.Verify(Key, header, ciphertext, tag[..31]));
+        Assert.False(Mac.Verify(Key, header, ciphertext, [.. tag, 0]));
+    }
 }
 
