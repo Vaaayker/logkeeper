@@ -80,5 +80,22 @@ public class AesCtrMacTests
 
         Assert.NotEqual(first, second);
     }
+    [Fact]
+    public void Mac_Verify_RejectsChangedHeaderOrCiphertext()
+    {
+        byte[] header = [1, 2, 3];
+        byte[] ciphertext = [4, 5, 6, 7];
+
+        byte[] tag = Mac.Compute(Key, header, ciphertext);
+
+        byte[] changedHeader = (byte[])header.Clone();
+        changedHeader[0] ^= 1;
+
+        byte[] changedCiphertext = (byte[])ciphertext.Clone();
+        changedCiphertext[0] ^= 1;
+
+        Assert.False(Mac.Verify(Key, changedHeader, ciphertext, tag));
+        Assert.False(Mac.Verify(Key, header, changedCiphertext, tag));
+    }
 }
 
