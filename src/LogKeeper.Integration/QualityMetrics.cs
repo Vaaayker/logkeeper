@@ -4,5 +4,5 @@ namespace LogKeeper.Integration;
 public static class QualityMetrics
 {
     public static double ComputeQ(double s, double r, double t, double alpha, double beta, double gamma)
-        => throw new NotImplementedException();
+        => alpha * s + beta * r + gamma * t;
 }
