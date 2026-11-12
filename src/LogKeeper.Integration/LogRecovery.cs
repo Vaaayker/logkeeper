@@ -5,6 +5,38 @@ namespace LogKeeper.Integration;
 /// <summary>Відновлення журналу з наявних реплік і усунення дублікатів.</summary>
 public static class LogRecovery
 {
+    /// <summary>Кожен пакет: PacketFormat.Read -> RecordCodec.ParseMany. Биті пакети
+    /// (FormatException) пропускаються, решта записів дедуплікується.</summary>
     public static List<LogRecord> Recover(IReadOnlyList<byte[]> packets, string password)
-        => throw new NotImplementedException();
+    {
+        ArgumentNullException.ThrowIfNull(packets);
+        ArgumentNullException.ThrowIfNull(password);
+
+        var records = new List<LogRecord>();
+        foreach (var packet in packets)
+        {
+            try
+            {
+                records.AddRange(RecordCodec.ParseMany(PacketFormat.Read(packet, password)));
+            }
+            catch (FormatException)
+            {
+                // битий пакет пропускаємо, записи візьмемо з інших реплік
+            }
+        }
+        return Deduplicate(records);
+    }
+
+    /// <summary>Прибирає повністю однакові записи (порівняння всіх полів) і сортує
+    /// за TimestampMs, а при однаковому часі — за SourceId.</summary>
+    public static List<LogRecord> Deduplicate(IEnumerable<LogRecord> records)
+    {
+        ArgumentNullException.ThrowIfNull(records);
+
+        return records
+            .Distinct()
+            .OrderBy(r => r.TimestampMs)
+            .ThenBy(r => r.SourceId)
+            .ToList();
+    }
 }

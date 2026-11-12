@@ -1,4 +1,3 @@
-
 using System;
 using System.Security.Cryptography;
 
@@ -25,7 +24,7 @@ public static class Mac
         return hmac.GetHashAndReset();
     }
 
-    /// <summary>Перевіряє тег за допомогою порівняння сталого часу.</summary>
+    /// <summary>Порівнює тег за сталий час. Тег неправильної довжини повертає false.</summary>
     public static bool Verify(
         byte[] key, byte[] header, byte[] ciphertext, byte[] tag)
     {
