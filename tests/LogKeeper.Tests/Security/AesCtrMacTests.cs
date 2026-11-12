@@ -69,4 +69,16 @@ public class AesCtrMacTests
         Assert.False(Mac.Verify(Key, [1, 2, 3], Plain, tag));
         Assert.False(Mac.Verify(Key, [1, 2, 3], Plain, tag[..16]));
     }
+    [Fact]
+    public void AesCtr_DifferentNonce_ProducesDifferentCiphertext()
+    {
+        byte[] nonce2 = (byte[])Nonce.Clone();
+        nonce2[0] ^= 1;
+
+        byte[] first = AesCtr.Crypt(Key, Nonce, Plain);
+        byte[] second = AesCtr.Crypt(Key, nonce2, Plain);
+
+        Assert.NotEqual(first, second);
+    }
 }
+
