@@ -1,3 +1,4 @@
+using System;
 using System.Security.Cryptography;
 
 namespace LogKeeper.Security;
@@ -7,23 +8,36 @@ public static class Mac
 {
     public const int TagSize = 32;
 
-    /// <summary>HMAC-SHA256(key, header || ciphertext).</summary>
+    /// <summary>Обчислює HMAC-SHA256(key, header || ciphertext).</summary>
     public static byte[] Compute(byte[] key, byte[] header, byte[] ciphertext)
     {
         ArgumentNullException.ThrowIfNull(key);
         ArgumentNullException.ThrowIfNull(header);
         ArgumentNullException.ThrowIfNull(ciphertext);
 
-        using var hmac = new HMACSHA256(key);
-        hmac.TransformBlock(header, 0, header.Length, null, 0);
-        hmac.TransformFinalBlock(ciphertext, 0, ciphertext.Length);
-        return hmac.Hash!;
+        using var hmac = IncrementalHash.CreateHMAC(
+            HashAlgorithmName.SHA256, key);
+
+        hmac.AppendData(header);
+        hmac.AppendData(ciphertext);
+
+        return hmac.GetHashAndReset();
     }
 
-    /// <summary>Порівнює тег за сталий час. Тег неправильної довжини -> false.</summary>
-    public static bool Verify(byte[] key, byte[] header, byte[] ciphertext, byte[] tag)
+    /// <summary>Порівнює тег за сталий час. Тег неправильної довжини повертає false.</summary>
+    public static bool Verify(
+        byte[] key, byte[] header, byte[] ciphertext, byte[] tag)
     {
-        if (tag is null || tag.Length != TagSize) return false;
-        return CryptographicOperations.FixedTimeEquals(Compute(key, header, ciphertext), tag);
+        ArgumentNullException.ThrowIfNull(key);
+        ArgumentNullException.ThrowIfNull(header);
+        ArgumentNullException.ThrowIfNull(ciphertext);
+        ArgumentNullException.ThrowIfNull(tag);
+
+        if (tag.Length != TagSize)
+            return false;
+
+        byte[] expectedTag = Compute(key, header, ciphertext);
+
+        return CryptographicOperations.FixedTimeEquals(expectedTag, tag);
     }
 }
