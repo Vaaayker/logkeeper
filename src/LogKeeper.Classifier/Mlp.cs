@@ -183,6 +183,161 @@ public sealed class Mlp
         return predictions;
     }
 
-    // Навчання буде реалізовано в окремій issue.
-    public void Fit(double[][] x, int[] y) => throw new NotImplementedException();
+
+    // Навчання з типовими параметрами.
+    // 500 епох, швидкість навчання 0.01.
+    public void Fit(double[][] x, int[] y)
+    {
+        Fit(x, y, 500, 0.01);
+    }
+
+    // Навчання методом зворотного поширення помилки та SGD.
+    public void Fit(double[][] x, int[] y, int epochs, double learningRate)
+    {
+        // Перевіряємо вхідні дані.
+        if (x == null)
+            throw new ArgumentNullException(nameof(x));
+
+        if (y == null)
+            throw new ArgumentNullException(nameof(y));
+
+        if (x.Length == 0 || x.Length != y.Length)
+            throw new ArgumentException(
+                "Кількість прикладів повинна збігатися з кількістю міток і бути більшою за нуль.");
+
+        if (epochs <= 0)
+            throw new ArgumentOutOfRangeException(nameof(epochs));
+
+        if (!double.IsFinite(learningRate) || learningRate <= 0)
+            throw new ArgumentOutOfRangeException(nameof(learningRate));
+
+        // Перевіряємо розмірність і значення навчальних прикладів.
+        for (int sample = 0; sample < x.Length; sample++)
+        {
+            if (x[sample] == null || x[sample].Length != layerSizes[0])
+                throw new ArgumentException("Неправильна кількість вхідних ознак.");
+
+            for (int i = 0; i < x[sample].Length; i++)
+            {
+                if (!double.IsFinite(x[sample][i]))
+                    throw new ArgumentException("Ознаки повинні бути скінченними числами.");
+            }
+
+            if (y[sample] < 0 || y[sample] >= layerSizes[layerSizes.Length - 1])
+                throw new ArgumentException("Неправильний номер класу.");
+        }
+
+        int lastLayer = weights.Length - 1;
+
+        // Одна епоха — один повний прохід по навчальних даних.
+        for (int epoch = 0; epoch < epochs; epoch++)
+        {
+            for (int sample = 0; sample < x.Length; sample++)
+            {
+                // Зберігаємо виходи кожного шару.
+                double[][] activations = new double[layerSizes.Length][];
+
+                // Вхідний шар отримує ознаки поточного прикладу.
+                activations[0] = x[sample];
+
+                // КРОК 1. Пряме поширення сигналу.
+                for (int layer = 0; layer < weights.Length; layer++)
+                {
+                    int neuronCount = layerSizes[layer + 1];
+                    double[] z = new double[neuronCount];
+
+                    for (int neuron = 0; neuron < neuronCount; neuron++)
+                    {
+                        double sum = biases[layer][neuron];
+
+                        for (int input = 0; input < layerSizes[layer]; input++)
+                        {
+                            sum += weights[layer][neuron][input]
+                                 * activations[layer][input];
+                        }
+
+                        z[neuron] = sum;
+                    }
+
+                    // Приховані шари використовують ReLU.
+                    // Вихідний шар використовує Softmax.
+                    if (layer == lastLayer)
+                        activations[layer + 1] = Softmax(z);
+                    else
+                        activations[layer + 1] = Relu(z);
+                }
+
+                // КРОК 2. Обчислюємо помилку вихідного шару.
+                double[][] deltas = new double[weights.Length][];
+
+                int outputCount = layerSizes[layerSizes.Length - 1];
+                deltas[lastLayer] = new double[outputCount];
+
+                // Для Softmax + cross-entropy похідна:
+                // прогнозована ймовірність мінус правильна мітка.
+                for (int neuron = 0; neuron < outputCount; neuron++)
+                {
+                    double target = neuron == y[sample] ? 1.0 : 0.0;
+
+                    deltas[lastLayer][neuron] =
+                        activations[lastLayer + 1][neuron] - target;
+                }
+
+                // КРОК 3. Зворотне поширення помилки.
+                // Рухаємося від останнього прихованого шару до першого.
+                for (int layer = lastLayer - 1; layer >= 0; layer--)
+                {
+                    int neuronCount = layerSizes[layer + 1];
+                    deltas[layer] = new double[neuronCount];
+
+                    for (int neuron = 0; neuron < neuronCount; neuron++)
+                    {
+                        double error = 0.0;
+
+                        // Враховуємо вплив нейрона на наступний шар.
+                        for (int nextNeuron = 0;
+                             nextNeuron < layerSizes[layer + 2];
+                             nextNeuron++)
+                        {
+                            error += weights[layer + 1][nextNeuron][neuron]
+                                   * deltas[layer + 1][nextNeuron];
+                        }
+
+                        // Похідна ReLU:
+                        // 1 для додатних значень, 0 для решти.
+                        if (activations[layer + 1][neuron] > 0.0)
+                            deltas[layer][neuron] = error;
+                        else
+                            deltas[layer][neuron] = 0.0;
+                    }
+                }
+
+                // КРОК 4. SGD — оновлюємо ваги після кожного прикладу.
+                // Усі помилки вже обчислені зі старими вагами.
+                for (int layer = 0; layer < weights.Length; layer++)
+                {
+                    for (int neuron = 0;
+                         neuron < layerSizes[layer + 1];
+                         neuron++)
+                    {
+                        for (int input = 0;
+                             input < layerSizes[layer];
+                             input++)
+                        {
+                            double gradient =
+                                deltas[layer][neuron]
+                                * activations[layer][input];
+
+                            weights[layer][neuron][input] -=
+                                learningRate * gradient;
+                        }
+
+                        // Також оновлюємо зсув нейрона.
+                        biases[layer][neuron] -=
+                            learningRate * deltas[layer][neuron];
+                    }
+                }
+            }
+        }
+    }
 }
