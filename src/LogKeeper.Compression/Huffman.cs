@@ -155,7 +155,7 @@ public static class Huffman
     {
         if (data == null || data.Length == 0)
         {
-            var empty = new byte[5];
+            var empty = new byte[1];
             empty[0] = MODE_NO_COMPRESSION;
             return empty;
         }
@@ -179,13 +179,11 @@ public static class Huffman
         int totalCompressedSize = headerSize + compressedDataBytes;
 
         // якщо стиснутий розмір більше ніж оригінал -> записуємо без стиснення
-        if (totalCompressedSize >= data.Length + 5)
+        if (totalCompressedSize >= data.Length + 1)
         {
-            var noComp = new byte[5 + data.Length];
+            var noComp = new byte[1 + data.Length];
             noComp[0] = MODE_NO_COMPRESSION;
-            byte[] lenBytes = BitConverter.GetBytes(data.Length);
-            Array.Copy(lenBytes, 0, noComp, 1, 4);
-            Array.Copy(data, 0, noComp, 5, data.Length);
+            Array.Copy(data, 0, noComp, 1, data.Length);
             return noComp;
         }
 
@@ -232,20 +230,29 @@ public static class Huffman
     // розпакування байтів
     public static byte[] Decode(byte[] blob)
     {
-        if (blob == null)
+        if (blob == null || blob.Length == 0)
         {
-            throw new FormatException("blob is null");
-        }
-
-        if (blob.Length < 5)
-        {
-            throw new FormatException($"blob занадто короткий: {blob.Length} байт");
+            throw new FormatException("blob is null or empty");
         }
 
         byte mode = blob[0];
         if (mode != MODE_NO_COMPRESSION && mode != MODE_COMPRESSED)
         {
             throw new FormatException($"невідомий mode: {mode}");
+        }
+
+        // режим 0 -> без стиснення
+        if (mode == MODE_NO_COMPRESSION)
+        {
+            var raw = new byte[blob.Length - 1];
+            Array.Copy(blob, 1, raw, 0, raw.Length);
+            return raw;
+        }
+
+        // режим 1 -> стиснуто
+        if (blob.Length < 7)
+        {
+            throw new FormatException($"blob занадто короткий: {blob.Length} байт");
         }
 
         int originalLength = BitConverter.ToInt32(blob, 1);
@@ -258,21 +265,6 @@ public static class Huffman
         {
             return Array.Empty<byte>();
         }
-
-        // режим 0 -> без стиснення
-        if (mode == MODE_NO_COMPRESSION)
-        {
-            if (blob.Length < 5 + originalLength)
-            {
-                throw new FormatException("дані обрізані");
-            }
-
-            var raw = new byte[originalLength];
-            Array.Copy(blob, 5, raw, 0, originalLength);
-            return raw;
-        }
-
-        // режим 1 -> стиснуто
         int offset = 5;
         if (blob.Length < offset + 2)
         {
