@@ -8,10 +8,15 @@ public static class LogRecovery
     /// <summary>Кожен пакет: PacketFormat.Read -> RecordCodec.ParseMany. Биті пакети
     /// (FormatException) пропускаються, решта записів дедуплікується.</summary>
     public static List<LogRecord> Recover(IReadOnlyList<byte[]> packets, string password)
+        => Recover(packets, password, out _);
+
+    /// <summary>Те саме, плюс кількість відкинутих (битих) пакетів.</summary>
+    public static List<LogRecord> Recover(IReadOnlyList<byte[]> packets, string password, out int rejected)
     {
         ArgumentNullException.ThrowIfNull(packets);
         ArgumentNullException.ThrowIfNull(password);
 
+        rejected = 0;
         var records = new List<LogRecord>();
         foreach (var packet in packets)
         {
@@ -22,6 +27,7 @@ public static class LogRecovery
             catch (FormatException)
             {
                 // битий пакет пропускаємо, записи візьмемо з інших реплік
+                rejected++;
             }
         }
         return Deduplicate(records);
