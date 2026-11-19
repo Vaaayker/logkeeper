@@ -1,0 +1,4 @@
+method,evaluations,best_Q,ValueNormal,ValueAnomaly,ValuePreIncident,CriticalBonus,BudgetFactor
+параметри за замовчуванням,1,0.7780,1,4,10,10,1.5000
+ГА,92,0.8010,2.8744,1.8405,6.5054,11.4591,2.4949
+випадковий пошук,92,0.8011,1.1759,1.0381,2.1636,11.3181,2.4729
